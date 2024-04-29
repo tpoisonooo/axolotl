@@ -1,4 +1,4 @@
-base_model: /workspace/models/qwen1.5-moe-2.7B-chat
+base_model: /workspace/models/Qwen1.5-4B-Chat
 trust_remote_code: true
 
 load_in_8bit: false
@@ -6,43 +6,40 @@ load_in_4bit: false
 strict: false
 
 datasets:
-  - path: mhenrichsen/alpaca_2k_test
+  - path: /workspace/axolotl/alpaca.json
     type: alpaca
 dataset_prepared_path:
 val_set_size: 0.05
-output_dir: ./out
+output_dir: ./out-qwen4
 
-sequence_len: 1024  # supports up to 32k
+sequence_len: 1400  # supports up to 32k
 sample_packing: false
 pad_to_sequence_len: false
 
 adapter: lora
 lora_model_dir:
-lora_r: 32
+lora_r: 64
 lora_alpha: 16
 lora_dropout: 0.05
 lora_target_linear: true
 lora_fan_in_fan_out:
 
-wandb_project:
+wandb_mode: online
+wandb_project: huixiangdou-cr
 wandb_entity:
 wandb_watch:
-wandb_name:
+wandb_name: qwen-4
 wandb_log_model:
 
-gradient_accumulation_steps: 4
-micro_batch_size: 1
-num_epochs: 4
+gradient_accumulation_steps: 1
+micro_batch_size: 16
+num_epochs: 1
 optimizer: paged_adamw_8bit
 lr_scheduler: cosine
-learning_rate: 0.0002
+learning_rate: 0.00002
 
 train_on_inputs: false
 group_by_length: false
-bf16: auto
-fp16:
-tf32: true
-
 gradient_checkpointing: true
 gradient_checkpointing_kwargs:
   use_reentrant: false
@@ -54,7 +51,7 @@ xformers_attention:
 flash_attention: true
 
 warmup_steps: 10
-evals_per_epoch: 4
+evals_per_epoch: 1
 saves_per_epoch: 1
 debug:
 deepspeed:
